@@ -1,0 +1,53 @@
+---
+title: "Test Chimera vs. No Chimera"
+author: "Collin J. Closek"
+date: "10/2/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r read biom file of 12S, chimera check and without, echo=FALSE}
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("phyloseq")
+library(phyloseq)
+
+#12S w/ chimera check
+m2w_12SwChimera <- import_biom("/Users/closek/Documents/m2w/m2w_12S_MB/re_w_sameparamsforallloci/Sept21_chimera/Analysis_20170921_1458/all_lib/_json_obs_md.biom")
+m2w_12SwChimera <- subset_samples(m2w_12S, sample_names(m2w_12S) != "ArtComm_HS_1" & sample_names(m2w_12S) != "ArtComm_HS_2" & sample_names(m2w_12S) !="ArtComm_HS_3" & sample_names(m2w_12S) !="CB_CANON160925_1" & sample_names(m2w_12S) !="CB_CANON160925_2" & sample_names(m2w_12S) !="CB_CANON160925_3" & sample_names(m2w_12S) !="EB_11162016" & sample_names(m2w_12S) !="EB_11212016" & sample_names(m2w_12S) !="EB_12282016" & sample_names(m2w_12S) !="NTC_pool_1" & sample_names(m2w_12S) !="NTC_pool_2" & sample_names(m2w_12S) !="NTC_pool_3")
+#m2w_12S <- subset_samples(m2w_12S, sample_type == "environmental")
+otu_12S <- otu_table(m2w_12S, taxa_are_rows=TRUE)
+metadata_12S <- m2w_12S@sam_data
+#names(metadata_12S)
+
+#12S w/out chimera check
+m2w_12S <- import_biom("/Users/closek/Documents/m2w/m2w_12S_MB/re_w_sameparamsforallloci/Sept19/Analysis_20170919_1550/all_lib/MB_12S_NT_json_obs_md.biom")
+m2w_12S <- subset_samples(m2w_12S, sample_names(m2w_12S) != "ArtComm_HS_1" & sample_names(m2w_12S) != "ArtComm_HS_2" & sample_names(m2w_12S) !="ArtComm_HS_3" & sample_names(m2w_12S) !="CB_CANON160925_1" & sample_names(m2w_12S) !="CB_CANON160925_2" & sample_names(m2w_12S) !="CB_CANON160925_3" & sample_names(m2w_12S) !="EB_11162016" & sample_names(m2w_12S) !="EB_11212016" & sample_names(m2w_12S) !="EB_12282016" & sample_names(m2w_12S) !="NTC_pool_1" & sample_names(m2w_12S) !="NTC_pool_2" & sample_names(m2w_12S) !="NTC_pool_3")
+#m2w_12S <- subset_samples(m2w_12S, sample_type == "environmental")
+otu_12S <- otu_table(m2w_12S, taxa_are_rows=TRUE)
+metadata_12S <- m2w_12S@sam_data
+#names(metadata_12S)
+```
+
+#plot richness for 12S of raw sequences Chimera Checked and not
+```{r Plot richness for 12S and 18S}
+install.packages("cowplot")
+require(cowplot)
+#p <- plot_richness(m2w_16S,x="DATE_TIME_GMT",title="16S",measures = "Observed") + theme(axis.title.x=element_blank())
+#p <- p + geom_point(size=5, alpha=0.4,position=position_jitter(width=0.1))
+#p <- p + geom_boxplot(outlier.color = NA, fill=NA)
+#p + geom_point(size=5, alpha=0.4)
+
+p3 <- plot_richness(m2w_12SwChimera,x="DATE_TIME_GMT",title="12SwChimera",measures = "Observed") + theme(axis.title.x=element_blank())
+p3 <- p3 + geom_point(size=5, alpha=0.4,position=position_jitter(width=0.1))
+p3 <- p3 + geom_boxplot(outlier.color = NA, fill=NA)
+p3 + geom_point(size=5, alpha=0.4)
+
+p4 <- plot_richness(m2w_12S,x="DATE_TIME_GMT",title="12S",measures = "Observed") + theme(axis.title.x=element_blank())
+p4 <- p4 + geom_point(size=5, alpha=0.4,position=position_jitter(width=0.1))
+p4 <- p4 + geom_boxplot(outlier.color = NA, fill=NA)
+p4 + geom_point(size=5, alpha=0.4)
+#plot_grid(p1, p2, p3, labels = c("A", "B", "C"), align="h")
+```
